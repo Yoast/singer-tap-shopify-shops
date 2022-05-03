@@ -1,0 +1,73 @@
+{
+    "selected": true,
+    "type": [
+        "null",
+        "object"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "shop_name": {
+            "type": "string"
+        },
+        "city": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "province": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "country": {
+            "type": "string"
+        },
+        "currency": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "domain": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "shop_domain": {
+            "type": "string"
+        },
+        "description": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "published_collections_count": {
+            "type": [
+                "null",
+                "number"
+            ]
+        },
+        "published_products_count": {
+            "type": [
+                "null",
+                "number"
+            ]
+        },
+        "shopify_pay_enabled_card_brands": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "shop_id": {
+            "type": "string"
+        }
+    }
+}
