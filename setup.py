@@ -15,7 +15,7 @@ setup(
         'python-dateutil~=2.8.1',
         'singer-python~=5.10.0',
         'google-cloud-bigquery~=3.0.0',
-        'pandas~=1.4.2'
+        'pandas~=1.3.5'
     ],
     entry_points="""
         [console_scripts]
