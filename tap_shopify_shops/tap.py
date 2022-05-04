@@ -39,14 +39,11 @@ def main() -> None:
         # Load command line catalog
         catalog = args.catalog
     else:
-        # Loadt the  catalog
+        # Load the  catalog
         catalog = discover()
-
-    # Initialize Shopify Partners client
-    shopify_partners: Shopify_Shops = Shopify_Shops(
-        args.config['organization_id'],
-        args.config['shopify_partners_server_token'],
-    )
+    
+    # Initialize Shopify Shops object
+    shopify_shops: Shopify_Shops = Shopify_Shops()
 
     sync(shopify_shops, args.state, catalog, args.config['start_date'])
 
