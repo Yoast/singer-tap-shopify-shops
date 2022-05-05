@@ -72,7 +72,7 @@ class Shopify_Shops(object):  # noqa: WPS230
         for date_day in self._start_days_till_now(start_date_string):
 
             #TODO: fix json location of bigquery credentials once on server
-            bqclient = bigquery.Client.from_service_account_json('C:\\Users\\stand\\bigquery_credentials.json')
+            bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
             query_string = """SELECT DISTINCT shop_domain 
                             FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
             df_urls = bqclient.query(query_string).result().to_dataframe()
