@@ -14,9 +14,7 @@ from tap_shopify_shops.sync import sync
 VERSION: str = pkg_resources.get_distribution('tap-shopify-shops').version
 LOGGER: logging.RootLogger = get_logger()
 REQUIRED_CONFIG_KEYS: tuple = (
-    # 'organization_id',
-    # 'shopify_partners_server_token',
-    'start_date'
+    'start_date',
 )
 
 
