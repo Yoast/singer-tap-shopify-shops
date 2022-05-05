@@ -51,62 +51,82 @@ class Shopify_Shops(object):  # noqa: WPS230
         Shopify Shop meta.json scrape
         """
         self.logger.info('Stream Shopify shop data')
-        #TODO: fix json location of bigquery credentials once on server
-        bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
-        query_string = """SELECT DISTINCT shop_domain 
-                        FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
-        df_urls = bqclient.query(query_string).result().to_dataframe()
 
-        # create an empty dataframe
-        df_results = pd.DataFrame(columns=['id', 'name', 'city', 'province', 
-                                    'country', 'currency', 'domain', 'url', 
-                                    'myshopify_domain', 'description', 'ships_to_countries', 
-                                    'money_format', 'published_collections_count', 
-                                    'published_products_count', 
-                                    'shopify_pay_enabled_card_brands'])
-        
-        # loop through each url, make the request, convert to json, append to result df
-        
-        for url in df_urls.itertuples():
-            try:
-                temp_url = URL_SCHEME + url.shop_domain + URL_END
-                json_response = requests.get(temp_url).json()
-                df_results = df_results.append([json_response], ignore_index=True)
-                time.sleep(1)
-            except:
-                self.logger.info(f"Exception occurred. Failed to scrape: {temp_url}")
-        
-        # drop the columns we don't care about
-        df_results.drop(['ships_to_countries', 'money_format'], axis=1, inplace=True)
+        # Validate the start_date value exists
+        start_date_input: str = str(kwargs.get('start_date', ''))
 
-        # convert to numeric
-        df_results[['id', 'published_collections_count', 'published_products_count']] = df_results[['id', 'published_collections_count', 'published_products_count']].apply(pd.to_numeric)
+        if not start_date_input:
+            raise ValueError('The parameter start_date is required.')
 
-        # add a column to turn the id into the same url + id format the other tables have
-        df_results['shop_id'] = df_results.apply(lambda row: "gid://partners/Shop/" + str(row.id), axis=1)
+        # Set start date and end date
+        start_date: datetime = isoparse(start_date_input)
 
-        # add an extracted_at column
-        df_results['extracted_at'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
+         # The start date until now function wants a string
+        start_date_string = str(start_date)
 
-        # If we ever want to only append new shops to the list, the following is code to do that.
-        # Note: would need to add logic to delete the shop from the table if it already exists 
-        # and has been grabbed fresh so the new data can replace the old data.
-        # # get the shops we've already scraped
-        # shop_query_string = """SELECT DISTINCT shop_domain 
-        #                     FROM `yoast-269513.shopify_partners_raw.shopify_shop_scrape`"""
-        # df_already_scraped_urls = bqclient.query(shop_query_string).result().to_dataframe()
+        # Extra kwargs will be converted to parameters in the API requests
+        # start_date is parsed into batches, thus we remove it from the kwargs
+        kwargs.pop('start_date', None)
 
-        # # compare already-scraped shops to results, keeping only new entries
-        # df_new_entries = df_results.merge(df_already_scraped_urls, left_on='myshopify_domain', 
-        #                                     right_on='shop_domain', how='outer', 
-        #                                     indicator=True).loc[lambda x:x['_merge']=='left_only']
-        # df_new_entries.drop(['_merge'], axis=1, inplace=True)
 
-        # Define cleaner:
-        cleaner: Callable = CLEANERS.get('shopify_shops')
+        for date_day in self._start_days_till_now(start_date_string):
 
-        for row in df_results.itertuples():
-            yield cleaner(row)
+            #TODO: fix json location of bigquery credentials once on server
+            bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
+            query_string = """SELECT DISTINCT shop_domain 
+                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
+            df_urls = bqclient.query(query_string).result().to_dataframe()
+
+            # create an empty dataframe
+            df_results = pd.DataFrame(columns=['id', 'name', 'city', 'province', 
+                                        'country', 'currency', 'domain', 'url', 
+                                        'myshopify_domain', 'description', 'ships_to_countries', 
+                                        'money_format', 'published_collections_count', 
+                                        'published_products_count', 
+                                        'shopify_pay_enabled_card_brands'])
+            
+            # loop through each url, make the request, convert to json, append to result df
+            
+            for url in df_urls.itertuples():
+                try:
+                    temp_url = URL_SCHEME + url.shop_domain + URL_END
+                    json_response = requests.get(temp_url).json()
+                    df_results = df_results.append([json_response], ignore_index=True)
+                    time.sleep(1)
+                except:
+                    self.logger.info(f"Exception occurred. Failed to scrape: {temp_url}")
+            
+            # drop the columns we don't care about
+            df_results.drop(['ships_to_countries', 'money_format'], axis=1, inplace=True)
+
+            # convert to numeric
+            df_results[['id', 'published_collections_count', 'published_products_count']] = df_results[['id', 'published_collections_count', 'published_products_count']].apply(pd.to_numeric)
+
+            # add a column to turn the id into the same url + id format the other tables have
+            df_results['shop_id'] = df_results.apply(lambda row: "gid://partners/Shop/" + str(row.id), axis=1)
+
+            # add an extracted_at column
+            df_results['extracted_at'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
+
+            # If we ever want to only append new shops to the list, the following is code to do that.
+            # Note: would need to add logic to delete the shop from the table if it already exists 
+            # and has been grabbed fresh so the new data can replace the old data.
+            # # get the shops we've already scraped
+            # shop_query_string = """SELECT DISTINCT shop_domain 
+            #                     FROM `yoast-269513.shopify_partners_raw.shopify_shop_scrape`"""
+            # df_already_scraped_urls = bqclient.query(shop_query_string).result().to_dataframe()
+
+            # # compare already-scraped shops to results, keeping only new entries
+            # df_new_entries = df_results.merge(df_already_scraped_urls, left_on='myshopify_domain', 
+            #                                     right_on='shop_domain', how='outer', 
+            #                                     indicator=True).loc[lambda x:x['_merge']=='left_only']
+            # df_new_entries.drop(['_merge'], axis=1, inplace=True)
+
+            # Define cleaner:
+            cleaner: Callable = CLEANERS.get('shopify_shops')
+
+            for row in df_results.itertuples():
+                yield cleaner(date_day, row)
 
         self.logger.info('Finished: shopify_shop_scrape')
 

@@ -81,6 +81,7 @@ def clean_row(row: dict, mapping: dict) -> dict:
     return cleaned
 
 def clean_shopify_shops(
+    date_day: str,
     response_data: dict,
 ) -> dict:
     """Clean shopify_partners_shops.
