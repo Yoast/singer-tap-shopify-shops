@@ -91,7 +91,7 @@ def clean_shopify_shops(
             dict -- cleaned response_data
         """
     # Get the mapping from the STREAMS
-    mapping: Optional[dict] = STREAMS['shopify_partners_shops'].get(
+    mapping: Optional[dict] = STREAMS['shopify_shops'].get(
         'mapping',
     )
 
