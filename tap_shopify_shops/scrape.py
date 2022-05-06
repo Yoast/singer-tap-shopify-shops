@@ -71,11 +71,9 @@ class Shopify_Shops(object):  # noqa: WPS230
 
         for date_day in self._start_days_till_now(start_date_string):
 
-            #TODO: fix json location of bigquery credentials once on server
-            bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
-            #TODO: remove limit when in production
+            bqclient = bigquery.Client.from_service_account_json('biquery_credentials.json')
             query_string = """SELECT DISTINCT shop_domain 
-                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge` LIMIT 10"""
+                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
             df_urls = bqclient.query(query_string).result().to_dataframe()
 
             # create an empty dataframe
@@ -91,9 +89,8 @@ class Shopify_Shops(object):  # noqa: WPS230
             for url in df_urls.itertuples():
                 try:
                     temp_url = URL_SCHEME + url.shop_domain + URL_END
-                    self.logger.info(f'~~~~~~URL: {temp_url}')
                     json_response = requests.get(temp_url).json()
-                    self.logger.info(f'+++++++Response: {json_response}')
+                    # check if the response has the right amount of columns. An error message would only have 1
                     if(len(json_response) != 15):
                         self.logger.info(f"Exception occurred. Response from {temp_url}: {json_response}")
                     else:
