@@ -73,8 +73,9 @@ class Shopify_Shops(object):  # noqa: WPS230
 
             #TODO: fix json location of bigquery credentials once on server
             bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
+            #TODO: remove limit when in production
             query_string = """SELECT DISTINCT shop_domain 
-                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
+                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge` LIMIT 10"""
             df_urls = bqclient.query(query_string).result().to_dataframe()
 
             # create an empty dataframe
@@ -105,8 +106,8 @@ class Shopify_Shops(object):  # noqa: WPS230
             # add a column to turn the id into the same url + id format the other tables have
             df_results['shop_id'] = df_results.apply(lambda row: "gid://partners/Shop/" + str(row.id), axis=1)
 
-            # add an extracted_at column
-            df_results['extracted_at'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
+            # add a date column
+            df_results['start_date'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
 
             # If we ever want to only append new shops to the list, the following is code to do that.
             # Note: would need to add logic to delete the shop from the table if it already exists 
