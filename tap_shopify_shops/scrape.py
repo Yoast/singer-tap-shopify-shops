@@ -107,7 +107,7 @@ class Shopify_Shops(object):  # noqa: WPS230
             df_results['shop_id'] = df_results.apply(lambda row: "gid://partners/Shop/" + str(row.id), axis=1)
 
             # add a date column
-            df_results['start_date'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
+            df_results['extracted_at'] = time.strftime("%Y-%m-%d %l:%M:%S %Z")
 
             # If we ever want to only append new shops to the list, the following is code to do that.
             # Note: would need to add logic to delete the shop from the table if it already exists 

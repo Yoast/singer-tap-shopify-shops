@@ -109,7 +109,8 @@ def clean_shopify_shops(
         "published_collections_count": response_data.published_collections_count,
         "published_products_count": response_data.published_products_count,
         "shopify_pay_enabled_card_brands": response_data.shopify_pay_enabled_card_brands,
-        "shop_id": response_data.shop_id
+        "shop_id": response_data.shop_id,
+        "extracted_at": response_data.extracted_at
     }
 
     return clean_row(cleaned_data, mapping)

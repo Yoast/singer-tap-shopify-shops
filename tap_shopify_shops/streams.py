@@ -254,7 +254,7 @@ STREAMS: MappingProxyType = MappingProxyType({
     'shopify_shops': {
         'key_properties': 'id',
         'replication_method': 'INCREMENTAL',
-        'replication_key': 'start_date',
+        'replication_key': 'extracted_at',
         'bookmark': 'start_date',
         'mapping': {
             'id': {
@@ -298,6 +298,9 @@ STREAMS: MappingProxyType = MappingProxyType({
             },
             'shop_id': {
                 'map': 'shop_id', 'null': False
+            },
+            'extracted_at': {
+                'map': 'extracted_at', 'null': False
             },
         }
     }

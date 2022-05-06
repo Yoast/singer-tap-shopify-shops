@@ -68,6 +68,10 @@
         },
         "shop_id": {
             "type": "string"
+        },
+        "extracted_at": {
+            "type": "string",
+            "format": "date-time"
         }
     }
 }
