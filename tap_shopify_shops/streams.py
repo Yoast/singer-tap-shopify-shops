@@ -293,9 +293,6 @@ STREAMS: MappingProxyType = MappingProxyType({
             'published_products_count': {
                 'map': 'published_products_count', 'null': True
             },
-            'shopify_pay_enabled_card_brands': {
-                'map': 'shopify_pay_enabled_card_brands', 'null': True
-            },
             'shop_id': {
                 'map': 'shop_id', 'null': False
             },

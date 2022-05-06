@@ -100,7 +100,7 @@ class Shopify_Shops(object):  # noqa: WPS230
                     self.logger.info(f"Exception occurred. Failed to scrape: {temp_url}")
             
             # drop the columns we don't care about
-            df_results.drop(['ships_to_countries', 'money_format'], axis=1, inplace=True)
+            df_results.drop(['ships_to_countries', 'money_format', 'shopify_pay_enabled_card_brands'], axis=1, inplace=True)
 
             # convert to numeric
             df_results[['id', 'published_collections_count', 'published_products_count']] = df_results[['id', 'published_collections_count', 'published_products_count']].apply(pd.to_numeric)

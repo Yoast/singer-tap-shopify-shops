@@ -60,12 +60,6 @@
                 "number"
             ]
         },
-        "shopify_pay_enabled_card_brands": {
-            "type": [
-                "null",
-                "string"
-            ]
-        },
         "shop_id": {
             "type": "string"
         },
