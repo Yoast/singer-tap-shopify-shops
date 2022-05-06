@@ -75,7 +75,7 @@ class Shopify_Shops(object):  # noqa: WPS230
             bqclient = bigquery.Client.from_service_account_json('bigquery_credentials.json')
             #TODO: remove limit when in production
             query_string = """SELECT DISTINCT shop_domain 
-                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge` LIMIT 10"""
+                            FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge` LIMIT 9"""
             df_urls = bqclient.query(query_string).result().to_dataframe()
 
             # create an empty dataframe
