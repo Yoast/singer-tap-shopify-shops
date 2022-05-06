@@ -93,6 +93,7 @@ class Shopify_Shops(object):  # noqa: WPS230
                     temp_url = URL_SCHEME + url.shop_domain + URL_END
                     self.logger.info(f'~~~~~~URL: {temp_url}')
                     json_response = requests.get(temp_url).json()
+                    self.logger.info(f'+++++++Response: {json_response}')
                     df_results = df_results.append([json_response], ignore_index=True)
                     time.sleep(1)
                 except:
