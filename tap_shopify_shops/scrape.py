@@ -69,7 +69,7 @@ class Shopify_Shops(object):  # noqa: WPS230
         kwargs.pop('start_date', None)
 
 
-        for date_day in self._start_days_till_now(start_date_string):
+        for date_day in self.date_cleaner(start_date_string):
 
             bqclient = bigquery.Client.from_service_account_json('biquery_credentials.json')
             query_string = """SELECT DISTINCT shop_domain 
@@ -142,8 +142,9 @@ class Shopify_Shops(object):  # noqa: WPS230
     #     )
     #     self.headers = headers
 
-    def _start_days_till_now(self, start_date: str) -> Generator:
-        """Yield YYYY/MM/DD for every day until now.
+    def date_cleaner(self, start_date: str) -> Generator:
+        """A cleaned date This is where the _start_days_till_now function normally sits
+        Just changed it for this tap so as to never duplicate data in an unnecessary loop.
         Arguments:
             start_date {str} -- Start date e.g. 2020-01-01
         Yields:
@@ -160,12 +161,4 @@ class Shopify_Shops(object):  # noqa: WPS230
         # Setup start period
         period: date = date(year, month, day)
 
-        # Setup itterator
-        dates: rrule = rrule(
-            freq=DAILY,
-            dtstart=period,
-            until=datetime.utcnow(),
-        )
-
-        # Yield dates in YYYY-MM-DD format
-        yield from (date_day.strftime('%Y-%m-%d') for date_day in dates)
+        return period.strftime('%Y-%m-%d')
