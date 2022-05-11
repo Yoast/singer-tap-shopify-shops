@@ -71,7 +71,7 @@ class Shopify_Shops(object):  # noqa: WPS230
 
         for date_day in self.date_cleaner(start_date_string):
 
-            bqclient = bigquery.Client.from_service_account_json('biquery_credentials.json')
+            bqclient = bigquery.Client.from_service_account_json('/opt/airflow/singer/biquery_credentials.json')
             query_string = """SELECT DISTINCT shop_domain 
                             FROM `yoast-269513.shopify_partners_raw.shopify_partners_app_subscription_charge`"""
             df_urls = bqclient.query(query_string).result().to_dataframe()
