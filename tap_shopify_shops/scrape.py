@@ -58,17 +58,18 @@ class Shopify_Shops(object):  # noqa: WPS230
         if not start_date_input:
             raise ValueError('The parameter start_date is required.')
 
-        # Set start date and end date
-        start_date: datetime = isoparse(start_date_input)
+        # # Set start date and end date
+        # start_date: datetime = isoparse(start_date_input)
 
-         # The start date until now function wants a string
-        start_date_string = str(start_date)
+        #  # The start date until now function wants a string
+        # start_date_string = str(start_date)
 
-        # Extra kwargs will be converted to parameters in the API requests
-        # start_date is parsed into batches, thus we remove it from the kwargs
+        # # Extra kwargs will be converted to parameters in the API requests
+        # # start_date is parsed into batches, thus we remove it from the kwargs
         kwargs.pop('start_date', None)
 
-        date_day = self.date_cleaner(start_date_string)
+        # date_day = self.date_cleaner(start_date_string)
+        date_day = time.strftime("%Y-%m-%d %l:%M:%S %Z")
 
         bqclient = bigquery.Client.from_service_account_json('/opt/airflow/singer/biquery_credentials.json')
         query_string = """SELECT DISTINCT shop_domain 

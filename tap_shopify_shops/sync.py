@@ -87,9 +87,6 @@ def sync_record(stream: CatalogEntry, row: dict, state: dict) -> None:
         row,
         time_extracted=datetime.now(timezone.utc),
     )
-
-    # Add milisecond to bookmark so data is never duplicated:
-    bookmark = bookmark.replace('000000Z', '100000Z')
     
     if bookmark:
         # Save the bookmark to the state
