@@ -16,7 +16,8 @@ setup(
         'singer-python~=5.10.0',
         'google-cloud-bigquery~=3.0.0',
         'pandas~=1.3.5',
-        'db-dtypes~=1.0.0'
+        'db-dtypes~=1.0.0',
+        'protobuf==3.19.0'
     ],
     entry_points="""
         [console_scripts]
